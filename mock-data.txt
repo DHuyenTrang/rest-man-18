@@ -1,0 +1,153 @@
+-- Sử dụng schema 'restman'
+USE restman;
+
+-- -----------------------------------------------------
+-- Nhóm 1: Các bảng cơ sở (Không có khóa ngoại)
+-- -----------------------------------------------------
+
+-- Thêm người dùng (Sẽ bao gồm cả nhân viên và khách hàng)
+INSERT INTO tblUser (id, username, password, name, email, address)
+VALUES
+(101, 'admin_tuan', 'pass123', 'Nguyễn Anh Tuấn', 'tuan.na@restman.com', '123 Ba Đình, Hà Nội'),
+(102, 'sales_lan', 'pass123', 'Trần Thị Lan', 'lan.tt@restman.com', '456 Cầu Giấy, Hà Nội'),
+(103, 'inventory_hung', 'pass123', 'Lê Văn Hùng', 'hung.lv@restman.com', '789 Thanh Xuân, Hà Nội'),
+(201, 'customer_minh', 'user_pass', 'Phạm Văn Minh', 'minh.pv@email.com', '111 Hoàng Mai, Hà Nội'),
+(202, 'customer_hoa', 'user_pass', 'Đặng Thu Hoa', 'hoa.dt@email.com', '222 Tây Hồ, Hà Nội');
+
+-- Thêm nhà cung cấp
+INSERT INTO tblSupplier (id, name, address)
+VALUES
+(1, 'Rau củ Đà Lạt', 'Lâm Đồng'),
+(2, 'Thịt sạch Vissan', 'TP. Hồ Chí Minh'),
+(3, 'Hải sản Hạ Long', 'Quảng Ninh');
+
+-- Thêm nguyên liệu
+INSERT INTO tblIngredient (id, name)
+VALUES
+(1, 'Cà chua'),
+(2, 'Thịt bò Úc'),
+(3, 'Phô mai Parmesan'),
+(4, 'Bánh phở'),
+(5, 'Thịt lợn'),
+(6, 'Bún');
+
+-- Thêm bàn ăn
+INSERT INTO tblTable (id, name)
+VALUES
+(1, 'Bàn 1 (2 người)'),
+(2, 'Bàn 2 (2 người)'),
+(3, 'Bàn 3 (4 người)'),
+(4, 'Bàn 4 (4 người)'),
+(5, 'Bàn 5 (8 người)');
+
+-- Thêm món ăn
+INSERT INTO tblDish (id, name, price)
+VALUES
+(1, 'Phở Bò Tái', 50000.00),
+(2, 'Bún Chả Hà Nội', 45000.00),
+(3, 'Steak Bò Sốt Tiêu', 250000.00),
+(4, 'Salad Cá Hồi', 120000.00);
+
+-- Thêm combo
+INSERT INTO tblCombo (id, name, price)
+VALUES
+(1, 'Combo Gia Đình', 399000.00),
+(2, 'Combo Trưa Văn Phòng', 89000.00);
+
+-- -----------------------------------------------------
+-- Nhóm 2: Bảng kế thừa từ tblUser và chi tiết menu
+-- -----------------------------------------------------
+
+-- Thêm nhân viên
+INSERT INTO tblEmployee (tblUserId, role)
+VALUES
+(101, 'Manager'),
+(102, 'Sales'),
+(103, 'Inventory');
+
+-- Thêm khách hàng
+INSERT INTO tblCustomer (tblUserId)
+VALUES
+(201),
+(202);
+
+-- Thêm chi tiết Combo - Món ăn
+INSERT INTO ComboDish (id, quantity, tblDishId, tblComboId)
+VALUES
+(1, 2, 2, 1), -- Combo Gia Đình có 2 Bún Chả
+(2, 1, 3, 1), -- Combo Gia Đình có 1 Steak
+(3, 1, 2, 2); -- Combo Trưa có 1 Bún Chả
+
+-- -----------------------------------------------------
+-- Nhóm 3: Bảng phân loại nhân viên
+-- -----------------------------------------------------
+
+-- Thêm quản lý
+INSERT INTO tblManager (tblEmployeeId)
+VALUES
+(101);
+
+-- Thêm nhân viên kho
+INSERT INTO tblInventoryStaff (tblEmployeeId)
+VALUES
+(103);
+
+-- Thêm nhân viên bán hàng
+INSERT INTO tblSalesStaff (tblEmployeeId)
+VALUES
+(102);
+
+-- -----------------------------------------------------
+-- Nhóm 4: Bảng nghiệp vụ (Hóa đơn, Đặt bàn, Nhập kho)
+-- -----------------------------------------------------
+
+-- Thêm thẻ thành viên
+INSERT INTO tblMembershipCard (id, expiresDate, tblCustomerId, tblSalesStaffId)
+VALUES
+(1, '2026-10-21', 201, 102); -- Khách hàng 201 (Minh) có thẻ, do nhân viên 102 (Lan) tạo
+
+-- Thêm hóa đơn nhập hàng
+INSERT INTO tblImportedBill (id, importedTime, tblSupplierId, tblInventoryStaffId)
+VALUES
+(1, '08:30:00', 1, 103), -- Phiếu nhập 1 (Rau) do nhân viên 103 (Hùng) nhập
+(2, '09:00:00', 2, 103); -- Phiếu nhập 2 (Thịt) do nhân viên 103 (Hùng) nhập
+
+-- Thêm hóa đơn bán hàng
+INSERT INTO tblBill (id, totalPrice, time, tblCustomerId, tblSalesStaffId)
+VALUES
+(1001, 295000.00, '19:30:00', 201, 102), -- Hóa đơn 1 cho khách 201 (Minh), nhân viên 102 (Lan)
+(1002, 89000.00, '12:05:00', 202, 102);  -- Hóa đơn 2 cho khách 202 (Hoa), nhân viên 102 (Lan)
+
+-- Thêm đặt bàn
+INSERT INTO tblOrderTable (id, note, startTime, endTime, tblCustomerId)
+VALUES
+(1, 'Xin chào cửa sổ', '19:00:00', '21:00:00', 201), -- Khách 201 (Minh) đặt bàn
+(2, NULL, '12:00:00', '13:00:00', 202);         -- Khách 202 (Hoa) đặt bàn
+
+-- -----------------------------------------------------
+-- Nhóm 5: Bảng chi tiết nghiệp vụ (Bảng trung gian)
+-- -----------------------------------------------------
+
+-- Thêm chi tiết hóa đơn nhập
+INSERT INTO ImportingIngredient (id, quantity, tblIngredientId, tblImportedBillId)
+VALUES
+(1, 50, 1, 1), -- Hóa đơn nhập 1: 50kg Cà chua
+(2, 20, 2, 2), -- Hóa đơn nhập 2: 20kg Thịt bò Úc
+(3, 30, 5, 2); -- Hóa đơn nhập 2: 30kg Thịt lợn
+
+-- Thêm chi tiết hóa đơn (món ăn)
+INSERT INTO tblOrderDish (id, quantity, tblDishId, tblBillId)
+VALUES
+(1, 1, 3, 1001), -- Hóa đơn 1001: 1 Steak (250k)
+(2, 1, 2, 1001); -- Hóa đơn 1001: 1 Bún chả (45k) -> Tổng 295k
+
+-- Thêm chi tiết hóa đơn (combo)
+INSERT INTO tblOrderCombo (id, quantity, tblComboId, tblBillId)
+VALUES
+(1, 1, 2, 1002); -- Hóa đơn 1002: 1 Combo Trưa Văn Phòng (89k)
+
+-- Thêm chi tiết đặt bàn (bàn nào)
+INSERT INTO tblOrderTableDetail (id, tblTableId, tblOrderTableId)
+VALUES
+(1, 3, 1), -- Đặt bàn 1 (của khách 201) dùng Bàn 3
+(2, 1, 2); -- Đặt bàn 2 (của khách 202) dùng Bàn 1

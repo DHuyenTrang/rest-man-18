@@ -1,0 +1,189 @@
+-- Tạo schema nếu chưa tồn tại
+CREATE SCHEMA IF NOT EXISTS restman;
+
+-- Sử dụng schema
+USE restman;
+
+-- -----------------------------------------------------
+-- Nhóm 1: Các bảng cơ sở (Không có khóa ngoại)
+-- -----------------------------------------------------
+
+-- Bảng người dùng ()
+CREATE TABLE tblUser (
+    id INT PRIMARY KEY,
+    username VARCHAR(255) UNIQUE,
+    password VARCHAR(255),
+    name VARCHAR(255),
+    email VARCHAR(255),
+    address VARCHAR(255)
+);
+
+-- Bảng nhà cung cấp
+CREATE TABLE tblSupplier (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    address VARCHAR(255)
+);
+
+-- Bảng nguyên liệu
+CREATE TABLE tblIngredient (
+    id INT PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+-- Bảng bàn ăn
+CREATE TABLE tblTable (
+    id INT PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+-- Bảng món ăn
+CREATE TABLE tblDish (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    price DECIMAL(10, 2) -- Sử dụng DECIMAL cho tiền tệ thay vì FLOAT
+);
+
+-- Bảng combo
+CREATE TABLE tblCombo (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    price DECIMAL(10, 2)
+);
+
+-- -----------------------------------------------------
+-- Nhóm 2: Bảng kế thừa từ tblUser và chi tiết menu
+-- -----------------------------------------------------
+
+-- Bảng nhân viên
+CREATE TABLE tblEmployee (
+    tblUserId INT PRIMARY KEY,
+    role VARCHAR(255),
+    FOREIGN KEY (tblUserId) REFERENCES tblUser(id)
+);
+
+-- Bảng khách hàng
+CREATE TABLE tblCustomer (
+    tblUserId INT PRIMARY KEY,
+    FOREIGN KEY (tblUserId) REFERENCES tblUser(id)
+);
+
+-- Bảng chi tiết Combo - Món ăn (Bảng trung gian N-N)
+CREATE TABLE ComboDish (
+    id INT PRIMARY KEY,
+    quantity INT,
+    tblDishId INT NOT NULL,
+    tblComboId INT NOT NULL,
+    FOREIGN KEY (tblDishId) REFERENCES tblDish(id),
+    FOREIGN KEY (tblComboId) REFERENCES tblCombo(id)
+);
+
+-- -----------------------------------------------------
+-- Nhóm 3: Bảng phân loại nhân viên
+-- -----------------------------------------------------
+
+-- Bảng quản lý
+CREATE TABLE tblManager (
+    tblEmployeeId INT PRIMARY KEY,
+    FOREIGN KEY (tblEmployeeId) REFERENCES tblEmployee(tblUserId)
+);
+
+-- Bảng nhân viên kho
+CREATE TABLE tblInventoryStaff (
+    tblEmployeeId INT PRIMARY KEY,
+    FOREIGN KEY (tblEmployeeId) REFERENCES tblEmployee(tblUserId)
+);
+
+-- Bảng nhân viên bán hàng
+CREATE TABLE tblSalesStaff (
+    tblEmployeeId INT PRIMARY KEY,
+    FOREIGN KEY (tblEmployeeId) REFERENCES tblEmployee(tblUserId)
+);
+
+-- -----------------------------------------------------
+-- Nhóm 4: Bảng nghiệp vụ (Hóa đơn, Đặt bàn, Nhập kho)
+-- -----------------------------------------------------
+
+-- Bảng thẻ thành viên
+CREATE TABLE tblMembershipCard (
+    id INT PRIMARY KEY,
+    expiresDate DATE,
+    tblCustomerId INT UNIQUE NOT NULL, -- 'U' nghĩa là UNIQUE
+    tblSalesStaffId INT,
+    FOREIGN KEY (tblCustomerId) REFERENCES tblCustomer(tblUserId),
+    FOREIGN KEY (tblSalesStaffId) REFERENCES tblSalesStaff(tblEmployeeId)
+);
+
+-- Bảng hóa đơn nhập hàng
+CREATE TABLE tblImportedBill (
+    id INT PRIMARY KEY,
+    importedTime TIME,
+    tblSupplierId INT,
+    tblInventoryStaffId INT,
+    FOREIGN KEY (tblSupplierId) REFERENCES tblSupplier(id),
+    FOREIGN KEY (tblInventoryStaffId) REFERENCES tblInventoryStaff(tblEmployeeId)
+);
+
+-- Bảng hóa đơn bán hàng
+CREATE TABLE tblBill (
+    id INT PRIMARY KEY,
+    totalPrice DECIMAL(10, 2),
+    time TIME,
+    tblCustomerId INT, -- Có thể NULL nếu là khách vãng lai
+    tblSalesStaffId INT, -- Có thể NULL
+    FOREIGN KEY (tblCustomerId) REFERENCES tblCustomer(tblUserId),
+    FOREIGN KEY (tblSalesStaffId) REFERENCES tblSalesStaff(tblEmployeeId)
+);
+
+-- Bảng đặt bàn
+CREATE TABLE tblOrderTable (
+    id INT PRIMARY KEY,
+    note VARCHAR(255) NULL, -- 'N' nghĩa là NULLABLE
+    startTime TIME,
+    endTime TIME,
+    tblCustomerId INT, -- Có thể NULL nếu khách không đăng ký
+    FOREIGN KEY (tblCustomerId) REFERENCES tblCustomer(tblUserId)
+);
+
+-- -----------------------------------------------------
+-- Nhóm 5: Bảng chi tiết nghiệp vụ (Bảng trung gian)
+-- -----------------------------------------------------
+
+-- Bảng chi tiết hóa đơn nhập
+CREATE TABLE ImportingIngredient (
+    id INT PRIMARY KEY,
+    quantity INT,
+    tblIngredientId INT NOT NULL,
+    tblImportedBillId INT NOT NULL,
+    FOREIGN KEY (tblIngredientId) REFERENCES tblIngredient(id),
+    FOREIGN KEY (tblImportedBillId) REFERENCES tblImportedBill(id)
+);
+
+-- Bảng chi tiết hóa đơn (món ăn)
+CREATE TABLE tblOrderDish (
+    id INT PRIMARY KEY,
+    quantity INT,
+    tblDishId INT NOT NULL,
+    tblBillId INT NOT NULL,
+    FOREIGN KEY (tblDishId) REFERENCES tblDish(id),
+    FOREIGN KEY (tblBillId) REFERENCES tblBill(id)
+);
+
+-- Bảng chi tiết hóa đơn (combo)
+CREATE TABLE tblOrderCombo (
+    id INT PRIMARY KEY,
+    quantity INT,
+    tblComboId INT NOT NULL,
+    tblBillId INT NOT NULL,
+    FOREIGN KEY (tblComboId) REFERENCES tblCombo(id),
+    FOREIGN KEY (tblBillId) REFERENCES tblBill(id)
+);
+
+-- Bảng chi tiết đặt bàn (bàn nào)
+CREATE TABLE tblOrderTableDetail (
+    id INT PRIMARY KEY,
+    tblTableId INT NOT NULL,
+    tblOrderTableId INT NOT NULL,
+    FOREIGN KEY (tblTableId) REFERENCES tblTable(id),
+    FOREIGN KEY (tblOrderTableId) REFERENCES tblOrderTable(id)
+);
