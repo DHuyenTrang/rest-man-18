@@ -36,16 +36,26 @@
         </span>
     </div>
 
-    <c:if test="${outSuccessNotification == true}">
-        <div class="notification success">
+    <c:if test="${sessionScope.outSuccessNotification == true}">
+        <div class="notification success" id="success-alert">
             Thêm món ăn mới thành công!
         </div>
     </c:if>
 
-    <c:remove var="outSuccessNotification" scope="request" />
+    <c:remove var="showSuccessNotification" scope="session" />
+
+    <script type="text/javascript">
+        var alertBox = document.getElementById("success-alert");
+        if (alertBox) {
+            setTimeout(function() {
+                alertBox.style.display = 'none';
+                window.location.href = "manage-dishes";
+            }, 3000);
+        }
+    </script>
 
     <div class="form-container">
-        <form action="add-dish" method="POST" enctype="multipart/form-data">
+        <form action="add-dish" method="POST">
             <div class="form-layout">
 
                 <div class="form-fields">

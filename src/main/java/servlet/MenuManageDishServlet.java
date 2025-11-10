@@ -16,7 +16,9 @@ import java.util.List;
 public class MenuManageDishServlet extends HttpServlet {
     private DishDAO dishDAO;
 
+    @Override
     public void init() throws ServletException {
+        super.init();
         dishDAO = new DishDAO();
     }
 

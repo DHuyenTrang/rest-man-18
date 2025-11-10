@@ -1,4 +1,3 @@
--- Tạo schema nếu chưa tồn tại
 CREATE SCHEMA IF NOT EXISTS restman;
 
 -- Sử dụng schema
@@ -8,9 +7,9 @@ USE restman;
 -- Nhóm 1: Các bảng cơ sở (Không có khóa ngoại)
 -- -----------------------------------------------------
 
--- Bảng người dùng ()
+-- Bảng người dùng
 CREATE TABLE tblUser (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     username VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     name VARCHAR(255),
@@ -20,33 +19,34 @@ CREATE TABLE tblUser (
 
 -- Bảng nhà cung cấp
 CREATE TABLE tblSupplier (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     name VARCHAR(255),
     address VARCHAR(255)
 );
 
 -- Bảng nguyên liệu
 CREATE TABLE tblIngredient (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     name VARCHAR(255)
 );
 
 -- Bảng bàn ăn
 CREATE TABLE tblTable (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     name VARCHAR(255)
 );
 
 -- Bảng món ăn
 CREATE TABLE tblDish (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     name VARCHAR(255),
-    price DECIMAL(10, 2) -- Sử dụng DECIMAL cho tiền tệ thay vì FLOAT
+    detail TEXT, -- Thêm cột này để khớp với AddDishServlet
+    price DECIMAL(10, 2)
 );
 
 -- Bảng combo
 CREATE TABLE tblCombo (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     name VARCHAR(255),
     price DECIMAL(10, 2)
 );
@@ -55,7 +55,7 @@ CREATE TABLE tblCombo (
 -- Nhóm 2: Bảng kế thừa từ tblUser và chi tiết menu
 -- -----------------------------------------------------
 
--- Bảng nhân viên
+-- Bảng nhân viên (ID là khóa ngoại, KHÔNG tự tăng)
 CREATE TABLE tblEmployee (
     tblUserId INT PRIMARY KEY,
     role VARCHAR(255),
@@ -63,15 +63,15 @@ CREATE TABLE tblEmployee (
     FOREIGN KEY (tblUserId) REFERENCES tblUser(id)
 );
 
--- Bảng khách hàng
+-- Bảng khách hàng (ID là khóa ngoại, KHÔNG tự tăng)
 CREATE TABLE tblCustomer (
     tblUserId INT PRIMARY KEY,
     FOREIGN KEY (tblUserId) REFERENCES tblUser(id)
 );
 
--- Bảng chi tiết Combo - Món ăn (Bảng trung gian N-N)
+-- Bảng chi tiết Combo - Món ăn
 CREATE TABLE ComboDish (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     quantity INT,
     tblDishId INT NOT NULL,
     tblComboId INT NOT NULL,
@@ -83,19 +83,19 @@ CREATE TABLE ComboDish (
 -- Nhóm 3: Bảng phân loại nhân viên
 -- -----------------------------------------------------
 
--- Bảng quản lý
+-- Bảng quản lý (ID là khóa ngoại, KHÔNG tự tăng)
 CREATE TABLE tblManager (
     tblEmployeeId INT PRIMARY KEY,
     FOREIGN KEY (tblEmployeeId) REFERENCES tblEmployee(tblUserId)
 );
 
--- Bảng nhân viên kho
+-- Bảng nhân viên kho (ID là khóa ngoại, KHÔNG tự tăng)
 CREATE TABLE tblInventoryStaff (
     tblEmployeeId INT PRIMARY KEY,
     FOREIGN KEY (tblEmployeeId) REFERENCES tblEmployee(tblUserId)
 );
 
--- Bảng nhân viên bán hàng
+-- Bảng nhân viên bán hàng (ID là khóa ngoại, KHÔNG tự tăng)
 CREATE TABLE tblSalesStaff (
     tblEmployeeId INT PRIMARY KEY,
     FOREIGN KEY (tblEmployeeId) REFERENCES tblEmployee(tblUserId)
@@ -107,9 +107,9 @@ CREATE TABLE tblSalesStaff (
 
 -- Bảng thẻ thành viên
 CREATE TABLE tblMembershipCard (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     expiresDate DATE,
-    tblCustomerId INT UNIQUE NOT NULL, -- 'U' nghĩa là UNIQUE
+    tblCustomerId INT UNIQUE NOT NULL,
     tblSalesStaffId INT,
     FOREIGN KEY (tblCustomerId) REFERENCES tblCustomer(tblUserId),
     FOREIGN KEY (tblSalesStaffId) REFERENCES tblSalesStaff(tblEmployeeId)
@@ -117,7 +117,7 @@ CREATE TABLE tblMembershipCard (
 
 -- Bảng hóa đơn nhập hàng
 CREATE TABLE tblImportedBill (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     importedTime TIME,
     tblSupplierId INT,
     tblInventoryStaffId INT,
@@ -127,22 +127,22 @@ CREATE TABLE tblImportedBill (
 
 -- Bảng hóa đơn bán hàng
 CREATE TABLE tblBill (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     totalPrice DECIMAL(10, 2),
     time TIME,
-    tblCustomerId INT, -- Có thể NULL nếu là khách vãng lai
-    tblSalesStaffId INT, -- Có thể NULL
+    tblCustomerId INT,
+    tblSalesStaffId INT,
     FOREIGN KEY (tblCustomerId) REFERENCES tblCustomer(tblUserId),
     FOREIGN KEY (tblSalesStaffId) REFERENCES tblSalesStaff(tblEmployeeId)
 );
 
 -- Bảng đặt bàn
 CREATE TABLE tblOrderTable (
-    id INT PRIMARY KEY,
-    note VARCHAR(255) NULL, -- 'N' nghĩa là NULLABLE
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
+    note VARCHAR(255) NULL,
     startTime TIME,
     endTime TIME,
-    tblCustomerId INT, -- Có thể NULL nếu khách không đăng ký
+    tblCustomerId INT,
     FOREIGN KEY (tblCustomerId) REFERENCES tblCustomer(tblUserId)
 );
 
@@ -152,7 +152,7 @@ CREATE TABLE tblOrderTable (
 
 -- Bảng chi tiết hóa đơn nhập
 CREATE TABLE ImportingIngredient (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     quantity INT,
     tblIngredientId INT NOT NULL,
     tblImportedBillId INT NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE ImportingIngredient (
 
 -- Bảng chi tiết hóa đơn (món ăn)
 CREATE TABLE tblOrderDish (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     quantity INT,
     tblDishId INT NOT NULL,
     tblBillId INT NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE tblOrderDish (
 
 -- Bảng chi tiết hóa đơn (combo)
 CREATE TABLE tblOrderCombo (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     quantity INT,
     tblComboId INT NOT NULL,
     tblBillId INT NOT NULL,
@@ -182,9 +182,14 @@ CREATE TABLE tblOrderCombo (
 
 -- Bảng chi tiết đặt bàn (bàn nào)
 CREATE TABLE tblOrderTableDetail (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY, -- Đã thêm
     tblTableId INT NOT NULL,
     tblOrderTableId INT NOT NULL,
     FOREIGN KEY (tblTableId) REFERENCES tblTable(id),
     FOREIGN KEY (tblOrderTableId) REFERENCES tblOrderTable(id)
 );
+
+-- -----------------------------------------------------
+-- BƯỚC 3: BẬT LẠI KIỂM TRA KHÓA NGOẠI
+-- -----------------------------------------------------
+SET FOREIGN_KEY_CHECKS = 1;
