@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
         else {
             request.getSession().setAttribute("user", user);
             request.getSession(true).setAttribute("loggedInUser", user.getName());
-            response.sendRedirect("MenuManageDish.jsp");
+            response.sendRedirect("manage-dishes");
         }
     }
 }

@@ -1,12 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/fmt" prefix = "fmt" %>
 
 <html>
 <head>
     <title>Quản lý món ăn</title>
-
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
-
 </head>
 <body>
 
@@ -16,7 +15,7 @@
         <p class="user-name">${sessionScope.loggedInUser}</p>
     </div>
     <ul>
-        <li class="active"><a href="MenuManageDish.jsp">Quản lý món ăn</a></li>
+        <li class="active"><a href="manage-dishes">Quản lý món ăn</a></li>
         <li class="#"><a href="">Quản lý Combo</a> </li>
     </ul>
 </div>
@@ -30,27 +29,28 @@
     <div class="section">
         <h3>Danh sách món ăn</h3>
         <div class="product-grid">
-            <div class="product-card">
-                <h4>Chocolate Brownie</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <span class="price">$15.00</span>
-                <a href="#" class="edit-link">Edit info</a>
-            </div>
-            <div class="product-card">
-                <h4>Buger</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <span class="price">$10.00</span>
-                <a href="#" class="edit-link">Edit info</a>
-            </div>
-            <div class="product-card">
-                <h4>Macarons</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                <span class="price">$12.00</span>
-                <a href="#" class="edit-link">Edit info</a>
-            </div>
+
+            <c:forEach var="dish" items="${requestScope.dishes}">
+                <div class="product-card">
+
+                    <h4>${dish.name}</h4>
+
+                    <p>${dish.detail}</p>
+
+                    <span class="price">
+                        <fmt:setLocale value="vi_VN"/>
+                        <fmt:formatNumber value="${dish.price}" type="currency" currencySymbol="VNĐ"/>
+                    </span>
+
+                    <a href="edit-dish?id=${dish.id}" class="edit-link">Edit info</a>
+                </div>
+            </c:forEach>
+            <c:if test="${empty requestScope.dishes}">
+                <p>Chưa có món ăn nào. Vui lòng <a href="AddDish.jsp">thêm món mới</a>.</p>
+            </c:if>
+
         </div>
     </div>
-
 </div>
 
 </body>

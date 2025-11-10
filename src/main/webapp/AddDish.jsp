@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 
 </head>
+</head>
 <body>
 
 <div class="sidebar">
@@ -20,7 +21,7 @@
         <p class="user-name">${sessionScope.loggedInUser}</p>
     </div>
     <ul>
-        <li class="active"><a href="MenuManageDish.jsp">Quản lý món ăn</a></li>
+        <li class="active"><a href="manage-dishes">Quản lý món ăn</a></li>
         <li class="#"><a href="">Quản lý Combo</a> </li>
     </ul>
 </div>
@@ -29,7 +30,7 @@
     <div class="header">
         <h1>Thêm món ăn mới</h1>
         <span class="breadcrumb">
-            <a href="MenuManageDish.jsp" style="text-decoration: none; color: #007bff;" name="subBack">
+            <a href="manage-dishes" style="text-decoration: none; color: #007bff;" name="subBack">
                 &#8592; Quay lại Quản lí món ăn
             </a>
         </span>

@@ -6,6 +6,7 @@ public class Dish {
     private String detail;
     private float price;
 
+    public Dish() {}
     public Dish(int id, String name, String detail, float price) {
         this.id = id;
         this.name = name;

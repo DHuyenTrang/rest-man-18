@@ -59,6 +59,7 @@ CREATE TABLE tblCombo (
 CREATE TABLE tblEmployee (
     tblUserId INT PRIMARY KEY,
     role VARCHAR(255),
+    detail TEXT,
     FOREIGN KEY (tblUserId) REFERENCES tblUser(id)
 );
 
