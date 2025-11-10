@@ -1,0 +1,74 @@
+<%--
+  File: AddDish.jsp
+  Description: Form để thêm một món ăn mới vào kho.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<html>
+<head>
+    <title>Thêm món ăn mới</title>
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Romdol.</h2>
+    <ul>
+        <li class="active"><a href="MenuManageDish.jsp">Quản lí món ăn</a></li>
+    </ul>
+</div>
+
+<div class="main-content">
+    <div class="header">
+        <h1>Thêm món ăn mới</h1>
+        <span class="breadcrumb">
+            <a href="MenuManageDish.jsp" style="text-decoration: none; color: #007bff;" name="subBack">
+                &#8592; Quay lại Quản lí món ăn
+            </a>
+        </span>
+    </div>
+
+    <c:if test="${outSuccessNotification == true}">
+        <div class="notification success">
+            Thêm món ăn mới thành công!
+        </div>
+    </c:if>
+
+    <c:remove var="outSuccessNotification" scope="request" />
+
+    <div class="form-container">
+        <form action="add-dish" method="POST" enctype="multipart/form-data">
+            <div class="form-layout">
+
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="inDishName">Tên món ăn:</label>
+                        <input type="text" id="inDishName" name="inDishName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inDishPrice">Giá:</label>
+                        <input type="number" id="inDishPrice" name="inDishPrice" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inDishDetail">Mô tả chi tiết:</label>
+                        <textarea id="inDishDetail" name="inDishDetail"></textarea>
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="text-align: right;">
+                <button type="submit" class="submit-btn" name="subAdd">Lưu món ăn</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
