@@ -15,9 +15,13 @@
 <body>
 
 <div class="sidebar">
-    <h2>Romdol.</h2>
+    <h2>Xin chào quản lý!</h2>
+    <div class="user-info-box">
+        <p class="user-name">${sessionScope.loggedInUser}</p>
+    </div>
     <ul>
-        <li class="active"><a href="MenuManageDish.jsp">Quản lí món ăn</a></li>
+        <li class="active"><a href="MenuManageDish.jsp">Quản lý món ăn</a></li>
+        <li class="#"><a href="">Quản lý Combo</a> </li>
     </ul>
 </div>
 

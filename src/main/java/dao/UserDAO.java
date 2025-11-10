@@ -33,6 +33,7 @@ public class UserDAO extends DAO{
                 user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
+                user.setName(rs.getString("name"));
                 user.setEmail(rs.getString("email"));
                 user.setAddress(rs.getString("address"));
             }

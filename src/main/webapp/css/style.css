@@ -15,13 +15,39 @@ body {
     border-right: 1px solid #e0e0e0;
     box-sizing: border-box;
 }
+/* ... (Thêm vào cuối file style.css) ... */
 
+/* === Cập nhật cho Sidebar === */
+
+/* 1. Giảm khoảng cách bên dưới tên App (Romdol.) */
 .sidebar h2 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 30px;
+    /* File cũ của bạn là 30px, chúng ta giảm bớt */
+    margin-bottom: 20px;
 }
 
+/* 2. Style cho khu vực thông tin người dùng */
+.sidebar .user-info-box {
+    padding-bottom: 20px;  /* Khoảng cách đến đường kẻ */
+    margin-bottom: 20px;   /* Khoảng cách đến menu */
+
+    /* Thêm một đường kẻ phân cách */
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* 3. Style cho dòng chữ "Xin chào," */
+.sidebar .user-info-box .welcome-text {
+    margin: 0;
+    font-size: 15px;
+    color: #555; /* Màu chữ xám, nhẹ nhàng */
+}
+
+/* 4. Style cho Tên người dùng */
+.sidebar .user-info-box .user-name {
+    margin: 4px 0 0 0; /* Khoảng cách nhỏ với dòng trên */
+    font-size: 18px;
+    font-weight: bold;
+    color: #333; /* Màu chữ đen, nổi bật */
+}
 .sidebar ul {
     list-style-type: none;
     padding: 0;
