@@ -32,9 +32,11 @@
 <body>
 
 <div class="sidebar">
-    <h2>Xin chào quản lý!</h2>
+    <h2>RestMan</h2>
+
     <div class="user-info-box">
-        <p class="user-name">${sessionScope.loggedInUser}</p>
+        <p class="welcome-text">Xin chào,</p>
+        <h3 class="user-name">${sessionScope.user.name}</h3>
     </div>
     <ul>
         <li><a href="MenuCustomer.jsp">Trang chủ</a></li>

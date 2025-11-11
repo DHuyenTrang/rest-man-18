@@ -67,7 +67,7 @@ public class TableDAO extends DAO{
 
     }
 
-     public List<Table> getTablesInTime(LocalDateTime startTime, LocalDateTime endTime) {
+     public List<Table> getFreeTables(LocalDateTime startTime, LocalDateTime endTime) {
          List<Table> freeTables = new ArrayList<>();
 
          String sql = "SELECT T.id, T.name, T.capacity " +
