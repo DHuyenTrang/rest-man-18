@@ -1,6 +1,8 @@
 package servlet;
 
 import dao.UserDAO;
+import model.Customer;
+import model.Manager;
 import model.User;
 
 import javax.servlet.ServletException;
@@ -33,7 +35,9 @@ public class LoginServlet extends HttpServlet {
         else {
             request.getSession().setAttribute("user", user);
             request.getSession(true).setAttribute("loggedInUser", user.getName());
-            response.sendRedirect("manage-dishes");
+
+            if (user instanceof Manager) response.sendRedirect("manage-dishes");
+            else if (user instanceof Customer) request.getRequestDispatcher("MenuCustomer.jsp").forward(request, response);
         }
     }
 }

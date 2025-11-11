@@ -16,9 +16,11 @@
 <body>
 
 <div class="sidebar">
-    <h2>Xin chào quản lý!</h2>
+    <h2>RestMan</h2>
+
     <div class="user-info-box">
-        <p class="user-name">${sessionScope.loggedInUser}</p>
+        <p class="welcome-text">Xin chào,</p>
+        <h3 class="user-name">${sessionScope.loggedInUser}</h3>
     </div>
     <ul>
         <li class="active"><a href="manage-dishes">Quản lý món ăn</a></li>
