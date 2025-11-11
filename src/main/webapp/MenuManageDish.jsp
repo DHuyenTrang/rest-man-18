@@ -47,7 +47,7 @@
                     <a href="edit-dish?id=${dish.id}" class="edit-link">Edit info</a>
                 </div>
             </c:forEach>
-            <c:if test="${empty requestScope.dishes}">
+            <c:if test="${empty requestScope.outDishes}">
                 <p>Chưa có món ăn nào. Vui lòng <a href="AddDish.jsp">thêm món mới</a>.</p>
             </c:if>
 
