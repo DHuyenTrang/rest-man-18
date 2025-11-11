@@ -32,7 +32,7 @@
         <h3>Danh sách món ăn</h3>
         <div class="product-grid">
 
-            <c:forEach var="dish" items="${requestScope.dishes}">
+            <c:forEach var="outDishes" items="${requestScope.dishes}">
                 <div class="product-card">
 
                     <h4>${dish.name}</h4>

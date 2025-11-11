@@ -24,7 +24,7 @@ public class MenuManageDishServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Dish> dishes = dishDAO.getAllDishes();
-        request.setAttribute("dishes", dishes);
+        request.setAttribute("outDishes", dishes);
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("MenuManageDish.jsp");
         dispatcher.forward(request, response);

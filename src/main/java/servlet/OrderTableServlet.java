@@ -1,7 +1,6 @@
 package servlet;
 
 import dao.TableDAO;
-import model.Customer;
 import model.OrderTable;
 import model.Table;
 
@@ -47,7 +46,7 @@ public class OrderTableServlet extends HttpServlet {
             LocalDateTime startTime = LocalDateTime.parse(dateStr + "T" + timeStartStr);
             LocalDateTime endTime = LocalDateTime.parse(dateStr + "T" + timeEndStr);
 
-            List<Table> freeTables = tableDAO.getTablesInTime(startTime, endTime);
+            List<Table> freeTables = tableDAO.getFreeTables(startTime, endTime);
 
             request.setAttribute("outListFreeTables", freeTables);
             request.setAttribute("inDatePicker", dateStr);
