@@ -212,7 +212,7 @@
                             <td>${table.name}</td>
                             <td>${table.capacity}</td>
                             <td>
-                                <input type="checkbox" name="selectedTableIds" value="${table.id}">
+                                <input type="checkbox" name="outSelectedTableIds" value="${table.getId()}">
                             </td>
                         </tr>
                     </c:forEach>
